@@ -3,8 +3,9 @@ package bootstrap
 import (
 	log "github.com/sirupsen/logrus"
 
+	"valorx-auth/internal/config"
+
 	"github.com/spf13/viper"
-	"go-boilerplate/internal/config"
 )
 
 // NewConfig initialize config object

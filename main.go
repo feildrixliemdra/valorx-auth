@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go-boilerplate/cmd"
+	"valorx-auth/cmd"
 )
 
 func main() {

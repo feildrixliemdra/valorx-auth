@@ -1,8 +1,8 @@
 package dto
 
 import (
-	"go-boilerplate/internal/model"
-	"go-boilerplate/internal/payload"
+	"valorx-auth/internal/model"
+	"valorx-auth/internal/payload"
 )
 
 func CreateUserPayloadToUserModel(p payload.CreateUserRequest) model.User {

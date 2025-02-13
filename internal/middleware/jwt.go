@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
-	"go-boilerplate/internal/util"
 	"net/http"
+	"valorx-auth/internal/util"
+
+	"github.com/gin-gonic/gin"
 )
 
 func JWTAuth(secretKey string) gin.HandlerFunc {

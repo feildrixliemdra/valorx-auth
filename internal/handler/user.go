@@ -2,14 +2,15 @@ package handler
 
 import (
 	"errors"
+	"valorx-auth/internal/config"
+	"valorx-auth/internal/constant"
+	"valorx-auth/internal/payload"
+	"valorx-auth/internal/service"
+	"valorx-auth/internal/util"
+
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cast"
-	"go-boilerplate/internal/config"
-	"go-boilerplate/internal/constant"
-	"go-boilerplate/internal/payload"
-	"go-boilerplate/internal/service"
-	"go-boilerplate/internal/util"
 )
 
 type IUserHandler interface {

@@ -2,12 +2,13 @@ package util
 
 import (
 	"errors"
+	"net/http"
+	"valorx-auth/internal/constant"
+	"valorx-auth/internal/payload"
+	val "valorx-auth/internal/validator"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"go-boilerplate/internal/constant"
-	"go-boilerplate/internal/payload"
-	val "go-boilerplate/internal/validator"
-	"net/http"
 )
 
 func GeneralSuccessResponse(c *gin.Context, message string, data any) {

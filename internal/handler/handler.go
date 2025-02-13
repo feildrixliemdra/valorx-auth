@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"go-boilerplate/internal/config"
-	"go-boilerplate/internal/service"
+	"valorx-auth/internal/config"
+	"valorx-auth/internal/service"
 )
 
 type Handler struct {

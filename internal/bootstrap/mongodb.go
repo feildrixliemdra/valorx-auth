@@ -2,7 +2,8 @@ package bootstrap
 
 import (
 	"context"
-	"go-boilerplate/internal/config"
+	"valorx-auth/internal/config"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

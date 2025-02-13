@@ -3,13 +3,14 @@ package server
 import (
 	"context"
 	"errors"
-	log "github.com/sirupsen/logrus"
-	"go-boilerplate/internal/config"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+	"valorx-auth/internal/config"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // Server interface

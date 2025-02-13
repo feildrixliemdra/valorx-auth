@@ -2,14 +2,15 @@ package http
 
 import (
 	"context"
+	"valorx-auth/internal/bootstrap"
+	"valorx-auth/internal/handler"
+	"valorx-auth/internal/repository"
+	"valorx-auth/internal/server"
+	"valorx-auth/internal/service"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
-	"go-boilerplate/internal/bootstrap"
-	"go-boilerplate/internal/handler"
-	"go-boilerplate/internal/repository"
-	"go-boilerplate/internal/server"
-	"go-boilerplate/internal/service"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

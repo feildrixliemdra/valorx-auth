@@ -1,4 +1,4 @@
-module go-boilerplate
+module valorx-auth
 
 go 1.22.0
 

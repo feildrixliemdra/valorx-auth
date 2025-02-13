@@ -1,8 +1,8 @@
 package migration
 
 import (
-	"go-boilerplate/internal/bootstrap"
-	"go-boilerplate/pkg/dbmigration"
+	"valorx-auth/internal/bootstrap"
+	"valorx-auth/pkg/dbmigration"
 )
 
 func MigrateDatabase() {

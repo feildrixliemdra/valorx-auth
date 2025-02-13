@@ -3,11 +3,11 @@ package service
 import (
 	"context"
 	"fmt"
-	"go-boilerplate/internal/constant"
-	"go-boilerplate/internal/dto"
-	"go-boilerplate/internal/model"
-	"go-boilerplate/internal/payload"
-	"go-boilerplate/internal/repository"
+	"valorx-auth/internal/constant"
+	"valorx-auth/internal/dto"
+	"valorx-auth/internal/model"
+	"valorx-auth/internal/payload"
+	"valorx-auth/internal/repository"
 )
 
 type IUserService interface {

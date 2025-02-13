@@ -1,11 +1,12 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
-	"go-boilerplate/internal/config"
-	"go-boilerplate/internal/handler"
-	"go-boilerplate/internal/middleware"
 	"net/http"
+	"valorx-auth/internal/config"
+	"valorx-auth/internal/handler"
+	"valorx-auth/internal/middleware"
+
+	"github.com/gin-gonic/gin"
 )
 
 type router struct {

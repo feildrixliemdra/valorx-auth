@@ -1,8 +1,8 @@
 package service
 
 import (
-	"go-boilerplate/internal/config"
-	"go-boilerplate/internal/repository"
+	"valorx-auth/internal/config"
+	"valorx-auth/internal/repository"
 )
 
 type Service struct {

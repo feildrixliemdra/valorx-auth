@@ -1,8 +1,9 @@
 package bootstrap
 
 import (
+	"valorx-auth/internal/config"
+
 	"github.com/jmoiron/sqlx"
-	"go-boilerplate/internal/config"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
