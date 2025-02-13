@@ -1,6 +1,6 @@
-# Go Boilerplate
+# User CRUD
 
-A boilerplate for building Go applications quickly and effectively. This template provides a structured foundation with essential libraries, configurations, and setup to speed up your development process in Go.
+Implement user CRUD with Go, Gin, Gorm and PostgreSQL.
 
 ## Features
 
@@ -8,9 +8,12 @@ A boilerplate for building Go applications quickly and effectively. This templat
 - Environment Management: .env configuration for managing environment variables.
 - Dependency Management: Uses Go Modules for easy dependency tracking.
 - Docker Support: Dockerized setup for easier deployment and consistency across environments.
-- Testing: Basic setup for unit testing.
 
 ## Getting Started
+
+### Postman Collection
+
+[Postman Collection](https://documenter.getpostman.com/view/6926243/2sAYXCkyc1)
 
 ### Prerequisites
 
@@ -63,7 +66,7 @@ A boilerplate for building Go applications quickly and effectively. This templat
 │   ├── repository     # Data access layer for managing database operations
 │   ├── services       # Core business logic and reusable services for the application
 │   ├── utils          # Utility functions and helper methods
-│   └── middleware     # Custom middleware functions for handling requests and responses
+requests and responses
 ├── configs            # Configuration files
 ├── scripts            # Scripts for various tasks
 ├── .env.example       # Environment variables example file
@@ -103,30 +106,6 @@ A boilerplate for building Go applications quickly and effectively. This templat
 - `internal/config`
 
   Contains configuration files and setup functions for initializing configurations. It typically reads from environment variables and .env files to set up values for application settings, database connections, and API configurations.
-
-- `internal/middleware`
-
-  Defines custom middleware functions for intercepting and processing requests/responses, such as authentication, authorization, logging, error handling, and rate limiting. Middleware can enhance request handling by adding cross-cutting functionality across endpoints.
-
-## Running Tests
-
-To run tests:
-
-```sh
-go test ./...
-```
-
-<!-- ROADMAP -->
-
-## Roadmap
-
-- [x] Setup base folder structure
-- [x] Setup REST handler
-- [x] Setup Request Payload Validator
-- [ ] Setup i8n response
-- [ ] Setup gRPC handler
-
-<!-- CONTACT -->
 
 ## Contact
 
