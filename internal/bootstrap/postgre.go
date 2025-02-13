@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"valorx-auth/internal/config"
+	"valorx-auth/internal/model"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -20,6 +21,11 @@ func InitiatePostgreSQL(cfg *config.Config) (*gorm.DB, error) {
 
 	psqlDB.SetMaxIdleConns(cfg.Postgre.MaxIdleConn)
 	psqlDB.SetMaxOpenConns(cfg.Postgre.MaxOpenConn)
+
+	err = db.AutoMigrate(&model.User{})
+	if err != nil {
+		return db, err
+	}
 
 	return db, nil
 }

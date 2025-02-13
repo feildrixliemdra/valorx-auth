@@ -1,26 +1,18 @@
 package payload
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type CreateUserRequest struct {
-	Name     string `json:"name" binding:"required,min=5"`
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,min=5"`
-}
-
-type GetUserListRequest struct {
-}
-
-type GetUserListData struct {
-	ID        uint64    `json:"id"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Name  string `json:"name" binding:"required,min=5"`
+	Email string `json:"email" binding:"required,email"`
 }
 
 type GetUserDetailData struct {
-	ID        uint64    `json:"id"`
+	ID        uuid.UUID `json:"id"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
@@ -28,8 +20,7 @@ type GetUserDetailData struct {
 }
 
 type UpdateUserRequest struct {
-	ID       uint64 `json:"-"`
-	Name     string `json:"name" binding:"required,min=5"`
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,min=5"`
+	ID    uuid.UUID `json:"-"`
+	Name  string    `json:"name" binding:"required,min=5"`
+	Email string    `json:"email" binding:"required,email"`
 }

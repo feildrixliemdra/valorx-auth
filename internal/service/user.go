@@ -2,20 +2,20 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"valorx-auth/internal/constant"
 	"valorx-auth/internal/dto"
 	"valorx-auth/internal/model"
 	"valorx-auth/internal/payload"
 	"valorx-auth/internal/repository"
+
+	"github.com/google/uuid"
 )
 
 type IUserService interface {
 	Create(ctx context.Context, p payload.CreateUserRequest) error
-	GetByID(ctx context.Context, id uint64) (result payload.GetUserDetailData, err error)
-	GetList(ctx context.Context) (result []payload.GetUserListData, err error)
+	GetByID(ctx context.Context, id uuid.UUID) (result payload.GetUserDetailData, err error)
 	Update(ctx context.Context, request payload.UpdateUserRequest) error
-	Delete(ctx context.Context, id uint64) error
+	Delete(ctx context.Context, id uuid.UUID) error
 }
 
 type user struct {
@@ -29,7 +29,6 @@ func NewUserService(repo repository.IUserRepository) IUserService {
 }
 
 func (s *user) Create(ctx context.Context, p payload.CreateUserRequest) (err error) {
-
 	// 1. make sure no duplicate email
 	existUser, err := s.UserRepository.GetBy(ctx, model.User{Email: p.Email})
 	if err != nil {
@@ -37,7 +36,6 @@ func (s *user) Create(ctx context.Context, p payload.CreateUserRequest) (err err
 	}
 
 	if existUser != nil {
-		fmt.Println(existUser)
 		return constant.ErrEmailAlreadyRegistered
 	}
 
@@ -48,8 +46,7 @@ func (s *user) Create(ctx context.Context, p payload.CreateUserRequest) (err err
 	return s.UserRepository.Create(ctx, usr)
 }
 
-func (s *user) GetByID(ctx context.Context, id uint64) (result payload.GetUserDetailData, err error) {
-
+func (s *user) GetByID(ctx context.Context, id uuid.UUID) (result payload.GetUserDetailData, err error) {
 	usr, err := s.UserRepository.GetBy(ctx, model.User{ID: id})
 	if err != nil {
 		return
@@ -57,23 +54,10 @@ func (s *user) GetByID(ctx context.Context, id uint64) (result payload.GetUserDe
 
 	if usr == nil {
 		err = constant.ErrUserNotFound
-
 		return
 	}
 
 	return dto.UserModelToUserDetailResponse(usr), nil
-}
-
-func (s *user) GetList(ctx context.Context) (result []payload.GetUserListData, err error) {
-
-	usr, err := s.UserRepository.GetAll(ctx)
-	if err != nil {
-		return
-	}
-
-	result = dto.UserModelToUserListResponse(usr)
-
-	return
 }
 
 func (s *user) Update(ctx context.Context, p payload.UpdateUserRequest) error {
@@ -95,7 +79,7 @@ func (s *user) Update(ctx context.Context, p payload.UpdateUserRequest) error {
 	return s.UserRepository.Update(ctx, usr)
 }
 
-func (s *user) Delete(ctx context.Context, id uint64) error {
+func (s *user) Delete(ctx context.Context, id uuid.UUID) error {
 	// 1. make sure user exist
 	currentUser, err := s.UserRepository.GetBy(ctx, model.User{ID: id})
 	if err != nil {

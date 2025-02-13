@@ -3,22 +3,23 @@ package dto
 import (
 	"valorx-auth/internal/model"
 	"valorx-auth/internal/payload"
+
+	"github.com/google/uuid"
 )
 
 func CreateUserPayloadToUserModel(p payload.CreateUserRequest) model.User {
 	return model.User{
-		Name:     p.Name,
-		Email:    p.Email,
-		Password: p.Password, // TODO: don't store plain password, need to encrypt
+		ID:    uuid.New(),
+		Name:  p.Name,
+		Email: p.Email,
 	}
 }
 
 func UpdateUserPayloadToUserModel(p payload.UpdateUserRequest) model.User {
 	return model.User{
-		ID:       p.ID,
-		Name:     p.Name,
-		Email:    p.Email,
-		Password: p.Password,
+		ID:    p.ID,
+		Name:  p.Name,
+		Email: p.Email,
 	}
 }
 
@@ -30,21 +31,4 @@ func UserModelToUserDetailResponse(u *model.User) payload.GetUserDetailData {
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
 	}
-}
-
-func UserModelToUserListResponse(u []model.User) []payload.GetUserListData {
-	res := []payload.GetUserListData{}
-
-	for i := 0; i < len(u); i++ {
-		res = append(res,
-			payload.GetUserListData{
-				ID:        u[i].ID,
-				Name:      u[i].Name,
-				Email:     u[i].Email,
-				CreatedAt: u[i].CreatedAt,
-				UpdatedAt: u[i].UpdatedAt,
-			})
-	}
-
-	return res
 }
