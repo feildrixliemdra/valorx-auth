@@ -9,12 +9,11 @@ import (
 	"valorx-auth/internal/util"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/cast"
 )
 
 type IUserHandler interface {
-	GetAll(c *gin.Context)
 	GetDetail(c *gin.Context)
 	Create(c *gin.Context)
 	Update(c *gin.Context)
@@ -32,36 +31,19 @@ func NewUserHandler(cfg *config.Config, userService service.IUserService) IUserH
 	}
 }
 
-func (h *user) GetAll(c *gin.Context) {
-	result, err := h.UserService.GetList(c)
-	if err != nil {
-		log.Errorf("error get user list %v", err) // log error
-		util.ErrInternalResponse(c, err)
-
-		return
-	}
-
-	util.GeneralSuccessResponse(c, "success get user data", result)
-
-	return
-}
-
 func (h *user) GetDetail(c *gin.Context) {
-	id := c.Param("id")
-
-	uintID, err := cast.ToUint64E(id)
+	uid, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		log.Warnf("error parsing user id from param %v", err)
 
 		util.ErrBindResponse(c, err)
-
 		return
 	}
 
-	result, err := h.UserService.GetByID(c, uintID)
+	result, err := h.UserService.GetByID(c, uid)
 	if err != nil {
 		if errors.Is(err, constant.ErrUserNotFound) {
-			log.Warnf("user id not found %v", uintID)
+			log.Warnf("user id not found %v", uid)
 			util.ErrBadRequestResponse(c, err.Error())
 
 			return
@@ -105,19 +87,16 @@ func (h *user) Create(c *gin.Context) {
 }
 
 func (h *user) Update(c *gin.Context) {
-	id := c.Param("id")
-
-	uintID, err := cast.ToUint64E(id)
+	uid, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		log.Warnf("error parsing user id from param %v", err)
 
 		util.ErrBindResponse(c, err)
-
 		return
 	}
 
 	req := payload.UpdateUserRequest{
-		ID: uintID,
+		ID: uid,
 	}
 
 	err = c.ShouldBindJSON(&req)
@@ -145,21 +124,18 @@ func (h *user) Update(c *gin.Context) {
 }
 
 func (h *user) Delete(c *gin.Context) {
-	id := c.Param("id")
-
-	uintID, err := cast.ToUint64E(id)
+	uid, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		log.Warnf("error parsing user id from param %v", err)
 
 		util.ErrBindResponse(c, err)
-
 		return
 	}
 
-	err = h.UserService.Delete(c, uintID)
+	err = h.UserService.Delete(c, uid)
 	if err != nil {
 		if errors.Is(constant.ErrUserNotFound, err) {
-			log.Warnf("user id not found %v", uintID)
+			log.Warnf("user id not found %v", uid)
 
 			util.ErrBadRequestResponse(c, err.Error())
 			return

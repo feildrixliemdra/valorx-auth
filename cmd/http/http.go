@@ -9,7 +9,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/mongo"
 	"gorm.io/gorm"
 )
 
@@ -19,7 +18,6 @@ func Start() {
 		cfg         = bootstrap.NewConfig()
 		err         error
 		postgreConn *gorm.DB
-		mongoDBConn *mongo.Client
 		repo        *repository.Repository
 		hndler      *handler.Handler
 		svc         *service.Service

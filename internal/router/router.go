@@ -1,10 +1,8 @@
 package router
 
 import (
-	"net/http"
 	"valorx-auth/internal/config"
 	"valorx-auth/internal/handler"
-	"valorx-auth/internal/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -28,41 +26,16 @@ type Router interface {
 }
 
 func (r *router) Init() {
-	// simulate some private data for basic auth
-	var secrets = gin.H{
-		"foo":  gin.H{"email": "foo@bar.com", "phone": "123433"},
-		"test": gin.H{"email": "test@example.com", "phone": "666"},
-	}
-
 	r.rtr.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
 
-	userRouter := r.rtr.Group("/users")
-	userRouter.GET("", r.handler.UserHandler.GetAll)
+	userRouter := r.rtr.Group("/v1/users")
 	userRouter.GET("/:id", r.handler.UserHandler.GetDetail)
 	userRouter.POST("", r.handler.UserHandler.Create)
 	userRouter.PUT("/:id", r.handler.UserHandler.Update)
 	userRouter.DELETE("/:id", r.handler.UserHandler.Delete)
-
-	//example of JWT middleware
-	authenticateHandler := r.rtr.Group("/authenticated")
-	authenticateHandler.Use(middleware.JWTAuth(r.cfg.JWT.SecretKey))
-
-	authorized := r.rtr.Group("/secured", middleware.BasicAuth())
-
-	// /admin/secrets endpoint
-	// hit "localhost:8080/secured/secrets
-	authorized.GET("/secrets", func(c *gin.Context) {
-		// get user, it was set by the BasicAuth middleware
-		user := c.MustGet(gin.AuthUserKey).(string)
-		if secret, ok := secrets[user]; ok {
-			c.JSON(http.StatusOK, gin.H{"user": user, "secret": secret})
-		} else {
-			c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
-		}
-	})
 
 }
