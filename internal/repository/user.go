@@ -6,9 +6,8 @@ import (
 	"errors"
 	"valorx-auth/internal/model"
 
-	"github.com/jmoiron/sqlx"
-
 	sq "github.com/Masterminds/squirrel"
+	"gorm.io/gorm"
 )
 
 type IUserRepository interface {
@@ -20,7 +19,7 @@ type IUserRepository interface {
 }
 
 type user struct {
-	DB *sqlx.DB
+	DB *gorm.DB
 }
 
 func NewUserRepository(opt Option) IUserRepository {

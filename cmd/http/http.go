@@ -1,7 +1,6 @@
 package http
 
 import (
-	"context"
 	"valorx-auth/internal/bootstrap"
 	"valorx-auth/internal/handler"
 	"valorx-auth/internal/repository"
@@ -9,9 +8,9 @@ import (
 	"valorx-auth/internal/service"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
+	"gorm.io/gorm"
 )
 
 // Start function handler starting http listener
@@ -19,7 +18,7 @@ func Start() {
 	var (
 		cfg         = bootstrap.NewConfig()
 		err         error
-		postgreConn *sqlx.DB
+		postgreConn *gorm.DB
 		mongoDBConn *mongo.Client
 		repo        *repository.Repository
 		hndler      *handler.Handler
@@ -36,26 +35,7 @@ func Start() {
 			log.Fatalf("error connect to PostgreSQL | %v", err)
 		}
 
-		//make sure connected
-		err = postgreConn.Ping()
-		if err != nil {
-			log.Fatalf("failed to ping PostgreSQL | %v", err)
-		}
 	}
-
-	if cfg.MongoDB.IsEnabled {
-		mongoDBConn, err = bootstrap.InitiateMongoDB(cfg)
-		if err != nil {
-			log.Fatalf("error connect to MongoDB | %v", err)
-		}
-
-		//make sure connected
-		err = mongoDBConn.Ping(context.Background(), nil)
-		if err != nil {
-			log.Fatalf("failed to ping MongoDB | %v", err)
-		}
-	}
-
 	repo = repository.InitiateRepository(repository.Option{
 		DB: postgreConn,
 	})

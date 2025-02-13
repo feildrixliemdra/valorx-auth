@@ -3,19 +3,23 @@ package bootstrap
 import (
 	"valorx-auth/internal/config"
 
-	"github.com/jmoiron/sqlx"
-
-	_ "github.com/jackc/pgx/v5/stdlib"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-func InitiatePostgreSQL(cfg *config.Config) (*sqlx.DB, error) {
-	db, err := sqlx.Connect("pgx", cfg.Postgre.URL) // you can change it to mysql or any other supported sql db
+func InitiatePostgreSQL(cfg *config.Config) (*gorm.DB, error) {
+	db, err := gorm.Open(postgres.Open(cfg.Postgre.URL))
 	if err != nil {
 		return db, err
 	}
 
-	db.SetMaxIdleConns(cfg.Postgre.MaxIdleConn)
-	db.SetMaxOpenConns(cfg.Postgre.MaxOpenConn)
+	psqlDB, err := db.DB()
+	if err != nil {
+		return db, err
+	}
+
+	psqlDB.SetMaxIdleConns(cfg.Postgre.MaxIdleConn)
+	psqlDB.SetMaxOpenConns(cfg.Postgre.MaxOpenConn)
 
 	return db, nil
 }

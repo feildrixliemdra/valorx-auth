@@ -1,15 +1,13 @@
 package repository
 
-import (
-	"github.com/jmoiron/sqlx"
-)
+import "gorm.io/gorm"
 
 type Repository struct {
 	UserRepository IUserRepository
 }
 
 type Option struct {
-	DB *sqlx.DB
+	DB *gorm.DB
 }
 
 func InitiateRepository(opt Option) *Repository {
