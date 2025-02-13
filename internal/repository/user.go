@@ -2,20 +2,18 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"valorx-auth/internal/model"
 
-	sq "github.com/Masterminds/squirrel"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type IUserRepository interface {
 	Create(ctx context.Context, user model.User) error
 	GetBy(ctx context.Context, usr model.User) (*model.User, error)
-	GetAll(ctx context.Context) ([]model.User, error)
 	Update(ctx context.Context, user model.User) error
-	DeleteByID(ctx context.Context, id uint64) error
+	DeleteByID(ctx context.Context, id uuid.UUID) error
 }
 
 type user struct {
@@ -28,150 +26,58 @@ func NewUserRepository(opt Option) IUserRepository {
 	}
 }
 
-func (r *user) DeleteByID(ctx context.Context, id uint64) (err error) {
-	query, args, err := sq.Update(model.User{}.TableName()).
-		SetMap(
-			sq.Eq{
-				"deleted_at": "now()", //soft delete
-			},
-		).
-		PlaceholderFormat(sq.Dollar).
-		Where(sq.Eq{"id": id}).
-		ToSql()
+func (r *user) DeleteByID(ctx context.Context, id uuid.UUID) (err error) {
+	result := r.DB.Model(&model.User{}).
+		Where("id = ? AND deleted_at IS NULL", id).
+		Updates(map[string]interface{}{
+			"deleted_at": "NOW()",
+		})
 
-	if err != nil {
-		return err
-	}
-
-	_, err = r.DB.ExecContext(ctx, query, args...)
-	if err != nil {
-		return err
-	}
-
-	return
+	return result.Error
 }
 
 func (r *user) Create(ctx context.Context, user model.User) (err error) {
-	query, args, err := sq.Insert(model.User{}.TableName()).
-		SetMap(
-			sq.Eq{
-				"email":      user.Email,
-				"name":       user.Name,
-				"password":   user.Password,
-				"created_at": "now()",
-				"updated_at": "now()",
-			},
-		).
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-
-	if err != nil {
-		return err
-	}
-
-	_, err = r.DB.ExecContext(ctx, query, args...)
-	if err != nil {
-		return err
-	}
-
-	return
+	result := r.DB.WithContext(ctx).Create(&user)
+	return result.Error
 }
 
 func (r *user) GetBy(ctx context.Context, usr model.User) (*model.User, error) {
 	var result model.User
 
-	q := sq.Select(
-		"id",
-		"name",
-		"email",
-		"created_at",
-		"updated_at",
-	).
-		From(result.TableName()).
-		Where(sq.Eq{"deleted_at": nil})
+	query := r.DB.WithContext(ctx).
+		Model(&model.User{}).
+		Where("deleted_at IS NULL")
 
 	if usr.Name != "" {
-		q = q.Where(sq.ILike{"name": "%" + usr.Name + "%"})
+		query = query.Where("name ILIKE ?", "%"+usr.Name+"%")
 	}
 
 	if usr.Email != "" {
-		q = q.Where(sq.Eq{"email": usr.Email})
+		query = query.Where("email = ?", usr.Email)
 	}
 
-	if usr.ID != 0 {
-		q = q.Where(sq.Eq{"id": usr.ID})
+	if usr.ID != uuid.Nil || usr.ID.String() != "00000000-0000-0000-0000-000000000000" {
+		query = query.Where("id = ?", usr.ID)
 	}
 
-	query, args, err := q.PlaceholderFormat(sq.Dollar).ToSql()
+	err := query.First(&result).Error
 	if err != nil {
-		return nil, err
-	}
-
-	err = r.DB.GetContext(ctx, &result, query, args...)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
-
 		return nil, err
 	}
 
 	return &result, nil
 }
 
-func (r *user) GetAll(ctx context.Context) (result []model.User, err error) {
-	result = []model.User{}
-
-	query, args, err := sq.Select(
-		"id",
-		"name",
-		"email",
-		"created_at",
-		"updated_at",
-	).
-		From(model.User{}.TableName()).
-		Where(sq.Eq{"deleted_at": nil}).
-		ToSql()
-
-	if err != nil {
-		return
-	}
-
-	err = r.DB.SelectContext(ctx, &result, query, args...)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return result, nil
-		}
-
-		return
-	}
-
-	return
-}
-
 func (r *user) Update(ctx context.Context, user model.User) (err error) {
+	result := r.DB.Model(&model.User{}).
+		Where("id = ? AND deleted_at IS NULL", user.ID).
+		Updates(map[string]interface{}{
+			"email": user.Email,
+			"name":  user.Name,
+		})
 
-	query, args, err := sq.Update(model.User{}.TableName()).
-		SetMap(
-			sq.Eq{
-				"email":      user.Email,
-				"name":       user.Name,
-				"password":   user.Password,
-				"updated_at": "now()",
-			},
-		).
-		Where(sq.Eq{"id": user.ID}).
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-
-	if err != nil {
-		return err
-	}
-
-	_, err = r.DB.ExecContext(ctx, query, args...)
-	if err != nil {
-		return err
-	}
-
-	return
+	return result.Error
 }
