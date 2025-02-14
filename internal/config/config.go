@@ -7,6 +7,8 @@ type Config struct {
 	Postgre Postgre `mapstructure:"postgre" yaml:"postgre"`
 	MongoDB MongoDB `mapstructure:"mongodb" yaml:"mongodb"`
 	JWT     JWT     `mapstructure:"jwt" yaml:"jwt"`
+	Auth    Auth    `mapstructure:"auth" yaml:"auth"`
+	Flag    Flag    `mapstructure:"flag" yaml:"flag"`
 }
 
 type App struct {
@@ -31,4 +33,14 @@ type MongoDB struct {
 
 type JWT struct {
 	SecretKey string `mapstructure:"secret_key"`
+}
+
+type Auth struct {
+	GoogleClientID          string `mapstructure:"google_client_id" yaml:"google_client_id"`
+	GoogleClientSecret      string `mapstructure:"google_client_secret" yaml:"google_client_secret"`
+	GoogleClientCallbackURL string `mapstructure:"google_client_callback_url" yaml:"google_client_callback_url"`
+}
+
+type Flag struct {
+	IsGoogleAuthEnabled bool `mapstructure:"is_google_auth_enabled" yaml:"is_google_auth_enabled"`
 }

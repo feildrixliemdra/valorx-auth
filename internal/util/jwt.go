@@ -2,9 +2,10 @@ package util
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"strings"
 )
 
 // ValidateJWT validate jwt token from header
@@ -34,4 +35,10 @@ func ExtractToken(c *gin.Context) string {
 	}
 
 	return ""
+}
+
+// Generate JWT Token
+func GenerateToken(claims jwt.MapClaims, secretKey string) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(secretKey))
 }

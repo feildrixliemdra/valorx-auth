@@ -3,6 +3,7 @@ package router
 import (
 	"valorx-auth/internal/config"
 	"valorx-auth/internal/handler"
+	"valorx-auth/internal/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,8 +32,16 @@ func (r *router) Init() {
 			"message": "pong",
 		})
 	})
-
 	userRouter := r.rtr.Group("/v1/users")
+	if r.cfg.Flag.IsGoogleAuthEnabled {
+		authRouter := r.rtr.Group("/v1/auth")
+		authRouter.GET("/google/login", r.handler.AuthHandler.GoogleLogin)
+		authRouter.GET("/google/callback", r.handler.AuthHandler.GoogleCallback)
+
+		// protect users route with JWT only if google auth is enabled
+		userRouter.Use(middleware.JWTAuth(r.cfg.JWT.SecretKey))
+	}
+
 	userRouter.GET("/:id", r.handler.UserHandler.GetDetail)
 	userRouter.POST("", r.handler.UserHandler.Create)
 	userRouter.PUT("/:id", r.handler.UserHandler.Update)
