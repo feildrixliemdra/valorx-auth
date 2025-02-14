@@ -33,6 +33,8 @@ func (r *router) Init() {
 		})
 	})
 	userRouter := r.rtr.Group("/v1/users")
+
+	// enable google auth depend on flag
 	if r.cfg.Flag.IsGoogleAuthEnabled {
 		authRouter := r.rtr.Group("/v1/auth")
 		authRouter.GET("/google/login", r.handler.AuthHandler.GoogleLogin)

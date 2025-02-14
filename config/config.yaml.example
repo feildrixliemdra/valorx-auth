@@ -1,17 +1,23 @@
 app:
-  env: "local"
-  name: "valorx-auth"
-  port: "8080"
+  env: 'local'
+  name: 'valorx-auth'
+  port: '8080'
   read_timeout: 5
   write_timeout: 5
-  release_mode: "debug"
+  release_mode: 'debug'
 jwt:
-  secret_key: "694c67a583d5a631a6241469ec7943ac2b0f3d5c62ab56870c08d6f74d6a659f"
+  secret_key: '694c67a583d5a631a6241469ec7943ac2b0f3d5c62ab56870c08d6f74d6a659f'
 postgre:
-  is_enabled: false
-  url: ""
+  is_enabled: true
+  url: 'your-postgres-url'
   max_idle_conn: 5
   max_open_conn: 5
 mongodb:
   is_enabled: false
-  url: ""
+  url: ''
+auth:
+  google_client_id: 'your-google-client-id'
+  google_client_secret: 'your-google-client-secret'
+  google_client_callback_url: 'http://localhost:8080/v1/auth/google/callback'
+flag:
+  is_google_auth_enabled: false # set to true if you want to enable google auth and protect users route with JWT
