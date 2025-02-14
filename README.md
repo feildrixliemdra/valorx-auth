@@ -45,7 +45,7 @@ Implement user CRUD with Go, Gin, Gorm and PostgreSQL.
    ```
 5. Run the application:
    ```sh
-   go run main.go
+   go run main.go serve-http
    ```
    Or Using Docker
    ```sh
